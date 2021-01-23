@@ -24,7 +24,7 @@ public class Client implements Serializable {
     @Column(nullable = false)
     private String address;
 
-    @OneToMany(mappedBy = "client")
+    @OneToMany(mappedBy = "client", fetch = FetchType.EAGER)
     private List<Order> orders = new ArrayList<>();
 
     public Client() {
@@ -79,7 +79,7 @@ public class Client implements Serializable {
     @Override
     public String toString() {
         return "Client [id=" + id + ", firstName=" + firstName
-                + ", lastName=" + lastName + ", address=" + address
-                + ", orders=" + orders + "]";
+                + ", lastName=" + lastName + ", address=" + address + orders.size()
+                + ",\n orders=" + orders + "]";
     }
 }

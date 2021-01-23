@@ -1,5 +1,8 @@
 package pl.javastart.springjpamtm.model;
 
+import org.hibernate.annotations.Fetch;
+import org.hibernate.annotations.FetchMode;
+
 import javax.persistence.*;
 import java.io.Serializable;
 import java.util.ArrayList;
@@ -14,7 +17,8 @@ public class Order implements Serializable {
     @GeneratedValue(strategy = GenerationType.IDENTITY)
     @Column(name = "id_order")
     private Long id;
-    @ManyToMany
+    @ManyToMany(fetch = FetchType.EAGER)
+    @Fetch(FetchMode.SELECT)
     @JoinTable( name = "order_products",
             joinColumns = {@JoinColumn(name = "order_id", referencedColumnName = "id_order")},
             inverseJoinColumns = {@JoinColumn(name = "product_id", referencedColumnName = "id_product")})
@@ -37,9 +41,10 @@ public class Order implements Serializable {
 
     @Override
     public String toString() {
-        return "Order [id=" + id + ", product=" + products.toString()
-                + ", orderDetails=" + orderDetails + ", "
-                + client.getFirstName() + " " +client.getLastName()+ "]";
+        return "Order [id=" + id
+                + ", orderDetails=" + orderDetails
+                + ", client=" + client.getFirstName() + " " + client.getLastName() + products.size()
+                + ",\n products=" + products + "]";
     }
 
     public Long getId() {
