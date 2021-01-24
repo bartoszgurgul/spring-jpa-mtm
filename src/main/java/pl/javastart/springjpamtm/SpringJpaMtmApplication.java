@@ -19,21 +19,21 @@ public class SpringJpaMtmApplication {
 
         Client client = new Client("Jan", "Kowalski", "Krakowskie przedmieście 23, Warszawa");
         ClientDao clientDao = ctx.getBean(ClientDao.class);
-        clientDao.save(client);
-        System.out.println(client);
 
         Order order = new Order("z dostawą do domu");
-        order.setClient(client);
-        OrderDao orderDao = ctx.getBean(OrderDao.class);
-        orderDao.save(order);
-
         Product product1 = new Product("Telewizor LG 42'", 4800.0, "dolby surround");
         Product product2 = new Product("Telefon APple iPhone SE", 2200.0, "pokrowiec gratis");
-        ProductDao productDao = ctx.getBean(ProductDao.class);
-        productDao.save(product1);
-        productDao.save(product2);
+        order.getProducts().add(product1);
+        order.getProducts().add(product2);
+        client.addOrder(order);
 
-        orderDao.addProductsToOrder(order.getId(), product1, product2);
+
+        clientDao.save(client);
+
+        Client getClient = clientDao.get(client.getId());
+        System.out.println(getClient);
+
+        clientDao.remove(client);
 
         ctx.close();
 

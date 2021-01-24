@@ -24,8 +24,27 @@ public class Client implements Serializable {
     @Column(nullable = false)
     private String address;
 
-    @OneToMany(mappedBy = "client", fetch = FetchType.EAGER)
+    /* ustawienie cascade persist pozwoli ze podczas zapisywania klienta wsystkie powiązanie biekty zostaną zapisane kaskadowo
+
+     */
+    @OneToMany(
+            mappedBy = "client", fetch = FetchType.EAGER,
+            cascade = {CascadeType.PERSIST,CascadeType.REMOVE},
+    orphanRemoval = true) // metoda mowi co robi z powstałymi sieroami tej relacji
     private List<Order> orders = new ArrayList<>();
+
+    /* W JPA nalezy zadbac nad dwukierunkowym przepływem danych
+    poniewaz podczas zapisywania kaskadowego nie zaostał przypisany order realcja do jakiego klienta nalezy
+    client -> order -> product ( brakuje tutaj przypisania id do order do client id )
+    aby tego dokonac nalezy zapisywac metode addXXX gdzie xxx jest obiektem w tej relacji
+
+    W sumie ciekawe dlaczego nie mozna zwyklego seta zmienić pewnie dlatego ze ogolnie nie powinno sie tego poruszac
+    takie umowne ze generowane metody powinny takie pozostac...
+     */
+    public void addOrder(Order order){
+        order.setClient(this); // ustawienie relacji jakiej nam brakowało
+        getOrders().add(order);
+    }
 
     public Client() {
     }

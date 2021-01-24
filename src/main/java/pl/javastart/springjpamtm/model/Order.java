@@ -17,7 +17,8 @@ public class Order implements Serializable {
     @GeneratedValue(strategy = GenerationType.IDENTITY)
     @Column(name = "id_order")
     private Long id;
-    @ManyToMany(fetch = FetchType.EAGER)
+    /* konfiguracja do adnotacji cascade pozwala nam na zapisywnaie danego obiektu wraz z powiazanymi */
+    @ManyToMany(fetch = FetchType.EAGER, cascade = CascadeType.PERSIST)
     @Fetch(FetchMode.SELECT)
     @JoinTable( name = "order_products",
             joinColumns = {@JoinColumn(name = "order_id", referencedColumnName = "id_order")},
